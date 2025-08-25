@@ -6,3 +6,6 @@ imbalanced-learn
 matplotlib
 shap
 joblib
+uvicorn
+fastapi
+pydantic
