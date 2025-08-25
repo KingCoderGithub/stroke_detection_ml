@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.env
+.venv
+venv/
+.ipynb_checkpoints/
+
+# Data & outputs
+data/raw/
+data/processed/
+outputs/*.png
+outputs/*.pdf
+
+# Models (tracked with LFS; still ignore misc artifacts)
+models/*.pkl
+*.joblib
+
+# OS/editor
+.DS_Store
+*.swp
