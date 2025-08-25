@@ -17,7 +17,6 @@ outputs/*.pdf
 
 # Models (tracked with LFS; still ignore misc artifacts)
 models/*.pkl
-*.joblib
 
 # OS/editor
 .DS_Store

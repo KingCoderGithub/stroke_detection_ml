@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 
+# Set page metadata
 st.set_page_config(page_title="Stroke Risk Predictor", page_icon="🩺")
 
 st.title("🩺 Stroke Risk Predictor")
@@ -49,7 +50,6 @@ work_type = st.selectbox("Work Type", [
     "Kid", "Govt_job", "Never_worked", "Private", "Self-employed"
 ])
 
-
 # --- Predict Button ---
 if st.button("🔍 Predict Stroke Risk"):
     payload = {
@@ -63,12 +63,12 @@ if st.button("🔍 Predict Stroke Risk"):
         "Residence_type": Residence_type,
         "smoking_status": smoking_status,
         "work_type": work_type
-        
     }
 
     with st.spinner("Predicting..."):
         try:
-            response = requests.post("http://127.0.0.1:8000/predict", json=payload)
+            # 🔁 Connect to your FastAPI backend on Render
+            response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
             if response.status_code == 200:
                 result = response.json()
 
