@@ -9,39 +9,40 @@ st.set_page_config(
     layout="wide"
 )
 
-# ------------------- SIDEBAR NAVIGATION -------------------
+# ------------------- CUSTOM STYLING FOR SIDEBAR & PAGE -------------------
 st.markdown("""
     <style>
-        /* Remove black bar from the top */
+        /* Remove black header */
         header {visibility: hidden;}
 
-        /* Sidebar style */
+        /* Sidebar container */
         section[data-testid="stSidebar"] {
             background-color: #1d1d1f;
-            padding: 1.5rem 1rem;
+            padding: 2rem 1rem;
         }
 
-        /* Sidebar tab buttons */
+        /* Sidebar radio group as Notion-style cards */
         .stRadio > div {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.2rem;
         }
 
         .stRadio div[role="radiogroup"] > label {
             background-color: #2c2c2e;
-            color: #fefefe;
-            padding: 1rem;
+            color: #ffffff;
+            padding: 1rem 1.2rem;
             border-radius: 12px;
             font-weight: 600;
-            font-size: 1.05rem;
+            font-size: 1.1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
             cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
 
         .stRadio div[role="radiogroup"] > label:hover {
             background-color: #3a3a3c;
-            transform: translateX(4px);
+            transform: translateX(6px);
         }
 
         .stRadio div[role="radiogroup"] > label[data-selected="true"] {
@@ -50,13 +51,18 @@ st.markdown("""
             transform: scale(1.02);
         }
 
+        /* Make sidebar text white and arrow visible */
+        .css-1v3fvcr, .css-1dp5vir {
+            color: white !important;
+        }
+
         /* Main app container */
         .block-container {
-            padding: 2rem 5rem;
+            padding: 2rem 4rem;
             max-width: 100%;
         }
 
-        /* Background and text */
+        /* Global app background and font */
         .stApp {
             background-color: #f5f5f7;
             color: #1d1d1f;
@@ -67,7 +73,7 @@ st.markdown("""
             color: #1d1d1f;
         }
 
-        /* Input fields */
+        /* Inputs and labels */
         label, .stNumberInput label, .stSelectbox label {
             font-weight: 500;
             color: #1d1d1f;
@@ -78,7 +84,7 @@ st.markdown("""
             margin-bottom: 1rem;
         }
 
-        /* Buttons */
+        /* Button styling */
         .stButton>button {
             background-color: #1d1d1f;
             color: #ffffff;
@@ -92,7 +98,7 @@ st.markdown("""
             background-color: #333333;
         }
 
-        /* Alerts */
+        /* Alert styling */
         .stAlert-success {
             background-color: #d1f2e4 !important;
             color: #0a3d62 !important;
@@ -103,14 +109,14 @@ st.markdown("""
             color: #6a0a0a !important;
         }
 
-        /* Smooth scrolling to result area */
+        /* Smooth scroll */
         html {
             scroll-behavior: smooth;
         }
     </style>
 """, unsafe_allow_html=True)
 
-# Use after this:
+# ------------------- SIDEBAR NAVIGATION -------------------
 st.sidebar.title("🧭 Navigation")
 page = st.sidebar.radio("Go to", ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"])
 
@@ -121,42 +127,44 @@ if page.startswith("🏠"):
     st.markdown("---")
 
     # --- HEIGHT, WEIGHT, BMI block ---
-    col1, col2, col3 = st.columns([1.2, 1.2, 1])
-    with col1:
-        height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0)
-    with col2:
-        weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0)
-    with col3:
-        if height_cm > 0:
-            bmi = weight_kg / ((height_cm / 100) ** 2)
-            st.markdown(f"**💡 BMI:** `{bmi:.2f}`")
-        else:
-            bmi = 0
-
-    st.divider()
-
-    # --- Health + Lifestyle Inputs ---
-    col1, col2 = st.columns(2)
-
-    with col1:
-        age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
-        gender = st.selectbox("⚧ Gender", ["Male", "Female"])
-        ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
-        Residence_type = st.selectbox("🏙️ Residence Type", ["Urban", "Rural"])
-        work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
-
-    with col2:
-        smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
-        hypertension = st.selectbox("🩺 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        avg_glucose_level = st.number_input("🩸 Avg. Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0)
+    with st.container():
+        col1, col2, col3 = st.columns([1.1, 1.1, 0.8])
+        with col1:
+            height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0)
+        with col2:
+            weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0)
+        with col3:
+            if height_cm > 0:
+                bmi = weight_kg / ((height_cm / 100) ** 2)
+                st.markdown(f"**💡 BMI:** `{bmi:.2f}`")
+            else:
+                bmi = 0
 
     st.markdown("")
 
+    # --- Health + Lifestyle Inputs ---
+    with st.container():
+        col1, col2 = st.columns(2)
+
+        with col1:
+            age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
+            gender = st.selectbox("⚧ Gender", ["Male", "Female"])
+            ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
+            Residence_type = st.selectbox("🏙️ Residence Type", ["Urban", "Rural"])
+            work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+
+        with col2:
+            smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+            hypertension = st.selectbox("🩺 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+            heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+            avg_glucose_level = st.number_input("🩸 Avg. Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0)
+
     # --- Predict Button ---
+    st.markdown("")
     if st.button("🔍 Predict Stroke Risk"):
         st.markdown("⬇️ _Scroll down for your results..._")
         st.markdown('<div id="results"></div>', unsafe_allow_html=True)
+
         with st.spinner("⏳ Predicting..."):
             start = time.time()
             payload = {
@@ -189,7 +197,7 @@ if page.startswith("🏠"):
                         prob_percent = round(percent)
                         threshold_percent = round(threshold * 100)
 
-                        st.subheader(f"🧠 Stroke Risk Level: **{risk_level}**")
+                        st.subheader(f" Stroke Risk Level: **{risk_level}**")
 
                         st.markdown(f"""
                         **🧮 Estimated stroke risk:** **{prob_percent} / 100**  
