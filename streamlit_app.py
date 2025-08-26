@@ -97,111 +97,96 @@ tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
     ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"]
 )
 
-# ------------------- TAB: HOME (Improved Layout) -------------------
+# ------------------- TAB: HOME -------------------
 with tab_home:
-    st.markdown("""
-        <style>
-        .block-container {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-            padding-left: 2rem;
-            padding-right: 2rem;
-            max-width: 100%;
-        }
-        .stAlert-success {
-            background-color: #d1fae5 !important;
-            color: #065f46 !important;
-        }
-        label {
-            font-weight: 500 !important;
-        }
-        header { visibility: hidden; }
-        </style>
-    """, unsafe_allow_html=True)
+    st.title("🩺 Stroke Risk Predictor")
+    st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
 
-    st.markdown("## 🧠 Predict Your Stroke Risk")
-    st.write("Please enter your information below. Predictions are for educational use only.")
+    # --- Input Fields ---
+    age = st.number_input("📅 Age", min_value=1, max_value=120, value=35)
+    hypertension = st.selectbox("💓 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+    heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+    avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
 
     col1, col2 = st.columns(2)
-
     with col1:
-        age = st.number_input("📅 Age", min_value=1, max_value=120, value=35)
-        hypertension = st.selectbox("💉 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-        avg_glucose_level = st.number_input("🍬 Avg Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
-        smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
-
-    with col2:
         height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
+    with col2:
         weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
 
-        bmi = weight_kg / ((height_cm / 100) ** 2) if height_cm > 0 else 0
-        st.markdown(f"📊 **Calculated BMI:** `{bmi:.2f}`")
+    if height_cm > 0:
+        bmi = weight_kg / ((height_cm / 100) ** 2)
+        st.markdown(f"💡 **Calculated BMI:** `{bmi:.2f}`")
+    else:
+        bmi = 0
 
-        gender = st.selectbox("👤 Gender", ["Male", "Female"])
-        ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
-        Residence_type = st.selectbox("🏠 Residence Type", ["Urban", "Rural"])
-        work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+    gender = st.selectbox("⚧️ Gender", ["Male", "Female"])
+    ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
+    Residence_type = st.selectbox("🏘️ Residence Type", ["Urban", "Rural"])
+    smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+    work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
 
-# Placeholder for result section (so page scrolls naturally)
-result_placeholder = st.empty()
+    # --- Prediction Result Placeholder ---
+    result_placeholder = st.empty()
 
-if st.button("🔍 Predict Stroke Risk"):
-    payload = {
-        "age": age,
-        "hypertension": hypertension,
-        "heart_disease": heart_disease,
-        "avg_glucose_level": avg_glucose_level,
-        "bmi": bmi,
-        "gender": gender,
-        "ever_married": ever_married,
-        "Residence_type": Residence_type,
-        "smoking_status": smoking_status,
-        "work_type": work_type
-    }
+    # --- Predict Button ---
+    if st.button("🔍 Predict Stroke Risk"):
+        payload = {
+            "age": age,
+            "hypertension": hypertension,
+            "heart_disease": heart_disease,
+            "avg_glucose_level": avg_glucose_level,
+            "bmi": bmi,
+            "gender": gender,
+            "ever_married": ever_married,
+            "Residence_type": Residence_type,
+            "smoking_status": smoking_status,
+            "work_type": work_type
+        }
 
-    with st.spinner("🔄 Predicting stroke risk..."):
-        try:
-            response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
-            if response.status_code == 200:
-                result = response.json()
+        with st.spinner("🔄 Predicting stroke risk..."):
+            try:
+                response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
+                if response.status_code == 200:
+                    result = response.json()
 
-                if "error" in result:
-                    result_placeholder.error(f"🚨 Server error: {result['error']}")
-                else:
-                    probability = result.get("probability")
-                    percent = result.get("percent", result.get("probability", 0) * 100)
-                    threshold = result.get("threshold")
-                    risk_level = result.get("risk_level", "Unknown").upper()
-
-                    prob_percent = round(percent)
-                    threshold_percent = round(threshold * 100)
-
-                    result_placeholder.subheader(f"🧠 Stroke Risk Level: {risk_level}")
-                    result_placeholder.markdown(
-                        f"""
-                        **Your estimated stroke risk:** **{prob_percent}/100**  
-                        _Out of 100 people like you, around **{prob_percent} may experience a stroke**._
-
-                        **Model threshold:** **{threshold_percent}/100**  
-                        {"If your score is **above** this threshold, you're considered **high risk**." if prob_percent >= threshold_percent else "You're considered **low risk**."}
-                        """
-                    )
-
-                    if prob_percent >= threshold_percent:
-                        result_placeholder.error("⚠️ High Risk — Please consult a healthcare provider.")
+                    if "error" in result:
+                        result_placeholder.error(f"🚨 Server error: {result['error']}")
                     else:
-                        result_placeholder.markdown(
-                            '<div style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 5px; border: 1px solid #c3e6cb;">'
-                            '✅ <strong>Low Risk</strong> — Keep up the good habits!'
-                            '</div>',
-                            unsafe_allow_html=True
-                        )
-            else:
-                result_placeholder.error("❌ API error. Please try again.")
-        except Exception as e:
-            result_placeholder.error(f"Request failed: {e}")
+                        probability = result.get("probability")
+                        percent = result.get("percent", result.get("probability", 0) * 100)
+                        threshold = result.get("threshold")
+                        risk_level = result.get("risk_level", "Unknown").upper()
 
+                        prob_percent = round(percent)
+                        threshold_percent = round(threshold * 100)
+
+                        result_placeholder.markdown(
+                            f"""
+                            ## 🧠 Stroke Risk Level: **{risk_level}**
+
+                            ---
+                            - **Estimated Stroke Risk:** `{prob_percent}/100`
+                            - **Model Threshold:** `{threshold_percent}/100`
+                            - _Out of 100 people like you, around **{prob_percent} may experience a stroke**._
+
+                            {"🔺 **You are above the threshold and considered high risk.**" if prob_percent >= threshold_percent else "🟢 **You are below the threshold and considered low risk.**"}
+                            """
+                        )
+
+                        if prob_percent >= threshold_percent:
+                            result_placeholder.error("⚠️ **High Risk — Please consult a healthcare provider.**")
+                        else:
+                            result_placeholder.markdown(
+                                '<div style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 5px; border: 1px solid #c3e6cb; margin-top: 10px;">'
+                                '✅ <strong>Low Risk</strong> — Keep up the good habits!'
+                                '</div>',
+                                unsafe_allow_html=True
+                            )
+                else:
+                    result_placeholder.error("❌ API error. Please try again.")
+            except Exception as e:
+                result_placeholder.error(f"Request failed: {e}")
 
 
 # ------------------- TAB: ABOUT -------------------
