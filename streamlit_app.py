@@ -88,6 +88,76 @@ tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
 
 # ------------------- HOME TAB -------------------
 with tab_home:
+    # Set Apple-style minimalist look
+    st.markdown("""
+    <style>
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+        }
+        .main {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+        .stButton button {
+            background-color: #1d1d1f;
+            color: white;
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        .stButton button:hover {
+            background-color: #333;
+            color: white;
+        }
+        .block-container {
+            padding-top: 2rem;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("## 🧠 Stroke Risk Predictor", unsafe_allow_html=True)
+st.markdown("Welcome to the Stroke Risk Predictor. This tool uses a machine learning model trained on health and lifestyle data to estimate your risk of stroke.", unsafe_allow_html=True)
+st.markdown("---")
+
+# Elegant, centered layout
+col1, col2 = st.columns(2)
+
+with col1:
+    gender = st.selectbox("Gender", ["Male", "Female", "Other"])
+    age = st.number_input("Age", min_value=0, max_value=120, value=30)
+    hypertension = st.selectbox("Hypertension", ["No", "Yes"])
+    heart_disease = st.selectbox("Heart Disease", ["No", "Yes"])
+    ever_married = st.selectbox("Ever Married", ["No", "Yes"])
+
+with col2:
+    work_type = st.selectbox("Work Type", ["Private", "Self-employed", "Govt_job", "children", "Never_worked"])
+    Residence_type = st.selectbox("Residence Type", ["Urban", "Rural"])
+    smoking_status = st.selectbox("Smoking Status", ["formerly smoked", "never smoked", "smokes", "Unknown"])
+    avg_glucose_level = st.number_input("Average Glucose Level (mg/dL)", min_value=50.0, max_value=300.0, value=100.0)
+    bmi = st.number_input("BMI (Body Mass Index)", min_value=10.0, max_value=60.0, value=22.0)
+
+# Center the button and result
+center_col = st.columns([1, 2, 1])[1]
+with center_col:
+    if st.button("Predict Stroke Risk"):
+        with st.spinner("Analyzing..."):
+            # Insert your prediction logic call here
+            result = {
+                "risk_level": "Low Risk",
+                "probability": "7%",
+                "explanation": "Keep up the good habits!",
+                "threshold": 30
+            }
+            st.markdown(f"### ✅ {result['risk_level']} — {result['explanation']}")
+            st.markdown(f"**Predicted Probability:** {result['probability']} &nbsp;|&nbsp; **Model Threshold:** {result['threshold']}%")
+
     st.title("🩺 Stroke Risk Predictor")
     st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
 
