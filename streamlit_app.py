@@ -22,63 +22,70 @@ st.markdown("""
 
         /* Set overall background */
         .stApp {
-            background-color: #f4f6fa;
+            background-color: #1f2e1e;
             font-family: 'Segoe UI', sans-serif;
         }
 
         /* General text colors */
         h1, h2, h3, h4, h5, h6,
         .stMarkdown, .markdown-text-container, .stText, .stSelectbox, .stNumberInput {
-            color: #102a43;
+            color: #fefae0;
         }
 
         /* Input labels */
         label, .stRadio label, .stSelectbox label, .stNumberInput label {
             font-weight: 600;
-            color: #243b53;
+            color: #fefae0;
         }
 
         /* Buttons */
         .stButton>button {
-            background-color: #20639b;
-            color: white;
+            background-color: #4a5f4a;
+            color: #fefae0;
             font-weight: bold;
             border-radius: 8px;
             padding: 0.5em 1em;
             transition: 0.3s ease;
         }
         .stButton>button:hover {
-            background-color: #173f5f;
-            color: white;
+            background-color: #3b4b3b;
+            color: #fefae0;
         }
 
         /* Tabs styling */
         .stTabs [role="tab"] {
-            background-color: #dbe9f4;
-            color: #102a43;
+            background-color: #4a5f4a;
+            color: #fefae0;
             font-weight: bold;
             border-radius: 0.5rem 0.5rem 0 0;
             padding: 8px 16px;
             margin-right: 4px;
         }
         .stTabs [aria-selected="true"] {
-            background-color: #20639b !important;
-            color: white !important;
+            background-color: #6c8f6c !important;
+            color: #1f2e1e !important;
         }
 
         /* Subheader in results */
         .stMarkdown h2 {
-            color: #173f5f;
+            color: #fefae0;
         }
 
         /* Status messages */
-        .stAlert {
-            border-radius: 10px;
+        .stAlert-success {
+            background-color: #fefae0 !important;
+            color: #1f2e1e !important;
+            font-weight: bold;
+        }
+        .stAlert-error {
+            background-color: #5c4033 !important;
+            color: #fefae0 !important;
+            font-weight: bold;
         }
 
         /* Fix for markdown text inside tabs */
         .stMarkdown p {
-            color: #102a43;
+            color: #fefae0;
             line-height: 1.6;
         }
 
@@ -92,7 +99,6 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-
 # ------------------- NAVIGATION TABS -------------------
 tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
     ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"]
@@ -100,71 +106,9 @@ tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
 
 # ------------------- HOME TAB -------------------
 with tab_home:
-    # --- Scoped Styling for Home Tab Only ---
-    st.markdown("""
-        <style>
-            .stApp {
-                background-color: #450202;
-                color: #fceabb;
-            }
-
-            h1, h2, h3, .stMarkdown, label, div, p {
-                color: #fceabb !important;
-            }
-
-            .st-bb {
-                background-color: #450202 !important;
-            }
-
-            .stButton>button {
-                background-color: #ffd700 !important;
-                color: #450202 !important;
-                font-weight: bold;
-                border-radius: 8px;
-                padding: 0.5em 1.2em;
-            }
-            .stButton>button:hover {
-                background-color: #fceabb !important;
-                color: #450202 !important;
-            }
-
-            .stTabs [role="tab"] {
-                background-color: #fceabb;
-                color: #450202;
-                font-weight: bold;
-                border-radius: 0.5rem 0.5rem 0 0;
-                padding: 8px 16px;
-                margin-right: 4px;
-            }
-
-            .stTabs [aria-selected="true"] {
-                background-color: #ffd700 !important;
-                color: #450202 !important;
-            }
-
-            .stAlert-success {
-                background-color: #fceabb !important;
-                color: #450202 !important;
-                font-weight: bold;
-            }
-
-            .stAlert-error {
-                background-color: #8b0000 !important;
-                color: #fff8dc !important;
-                font-weight: bold;
-            }
-
-            .block-container {
-                padding: 2rem 4rem;
-                max-width: 100% !important;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
     st.title("🩺 Stroke Risk Predictor")
     st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
 
-    # --- Input Layout ---
     col1, col2 = st.columns(2)
     with col1:
         height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
@@ -188,7 +132,6 @@ with tab_home:
     heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
     avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
 
-    # --- Predict Button ---
     if st.button("🔍 Predict Stroke Risk"):
         with st.spinner("⏳ Predicting..."):
             start = time.time()
