@@ -5,8 +5,8 @@ import time
 
 # ------------------- PAGE CONFIG -------------------
 st.set_page_config(
-    page_title="🩺 Stroke Risk Predictor",
-    page_icon="",
+    page_title="Stroke Risk Predictor",
+    page_icon="🩺",
     layout="centered"
 )
 
