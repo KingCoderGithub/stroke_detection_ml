@@ -1,57 +1,49 @@
 import streamlit as st
 import requests
-import streamlit.components.v1 as components
 import time
 
 # ------------------- PAGE CONFIG -------------------
 st.set_page_config(
     page_title="Stroke Risk Predictor",
     page_icon="🩺",
-    layout="centered"
+    layout="wide"
 )
+
+# ------------------- SIDEBAR NAVIGATION -------------------
+st.sidebar.title("🧭 Navigation")
+page = st.sidebar.radio("Go to", ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"])
 
 # ------------------- CUSTOM STYLING -------------------
 st.markdown("""
     <style>
-        /* Full-width layout */
         .block-container {
-            max-width: 100% !important;
-            padding: 2rem 4rem;
+            padding: 2rem 5rem;
         }
 
-        /* Background and text colors */
-        .stApp, .stApp body {
+        .stApp {
             background-color: #f5f5f7;
-            color: #1d1d1f;
-        }
-
-        /* Titles and headings */
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2 {
             color: #1d1d1f;
             font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
         }
 
-        /* Inputs and labels */
-        label, .stNumberInput label, .stSelectbox label {
+        h1, h2, h3 {
             color: #1d1d1f;
-            font-weight: 400;
         }
 
-        /* Buttons */
+        label, .stNumberInput label, .stSelectbox label {
+            font-weight: 500;
+        }
+
         .stButton>button {
             background-color: #1d1d1f;
             color: #ffffff;
             border-radius: 8px;
-            border: none;
-            padding: 0.6em 1.2em;
             font-weight: 600;
-            font-size: 1rem;
         }
         .stButton>button:hover {
             background-color: #444;
         }
 
-        /* Success and error messages */
         .stAlert-success {
             background-color: #d1f2e4 !important;
             color: #0a3d62 !important;
@@ -60,111 +52,21 @@ st.markdown("""
             background-color: #fdecea !important;
             color: #6a0a0a !important;
         }
-
-        /* Clean and spacious layout for input fields */
-        .stNumberInput, .stSelectbox {
-            margin-bottom: 1.2rem;
-        }
-
-        /* Use neutral style for tabs */
-        .stTabs [role="tab"] {
-            background-color: transparent;
-            color: #1d1d1f;
-            font-weight: 600;
-            padding: 0.6rem 1.2rem;
-            margin-right: 0.4rem;
-        }
-        .stTabs [aria-selected="true"] {
-            border-bottom: 2px solid #1d1d1f;
-        }
     </style>
 """, unsafe_allow_html=True)
 
 
-# ------------------- NAVIGATION TABS -------------------
-tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
-    ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"]
-)
+# ------------------- HOME -------------------
+if page.startswith("🏠"):
+    st.title("🧠 Stroke Risk Predictor")
+    st.markdown("Welcome! Estimate your stroke risk based on health and lifestyle inputs. For awareness only.")
 
-# ------------------- HOME TAB -------------------
-with tab_home:
-    # Set Apple-style minimalist look
-    st.markdown("""
-    <style>
-        body {
-            background-color: #f5f5f7;
-            color: #1d1d1f;
-        }
-        .main {
-            padding: 2rem;
-            max-width: 1000px;
-            margin: auto;
-        }
-        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #1d1d1f;
-        }
-        .stButton button {
-            background-color: #1d1d1f;
-            color: white;
-            border-radius: 8px;
-            padding: 0.5rem 1.5rem;
-            font-weight: 500;
-        }
-        .stButton button:hover {
-            background-color: #333;
-            color: white;
-        }
-        .block-container {
-            padding-top: 2rem;
-        }
-    </style>
-""", unsafe_allow_html=True)
-
-st.markdown("## 🧠 Stroke Risk Predictor", unsafe_allow_html=True)
-st.markdown("Welcome to the Stroke Risk Predictor. This tool uses a machine learning model trained on health and lifestyle data to estimate your risk of stroke.", unsafe_allow_html=True)
-st.markdown("---")
-
-# Elegant, centered layout
-col1, col2 = st.columns(2)
-
-with col1:
-    gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-    age = st.number_input("Age", min_value=0, max_value=120, value=30)
-    hypertension = st.selectbox("Hypertension", ["No", "Yes"])
-    heart_disease = st.selectbox("Heart Disease", ["No", "Yes"])
-    ever_married = st.selectbox("Ever Married", ["No", "Yes"])
-
-with col2:
-    work_type = st.selectbox("Work Type", ["Private", "Self-employed", "Govt_job", "children", "Never_worked"])
-    Residence_type = st.selectbox("Residence Type", ["Urban", "Rural"])
-    smoking_status = st.selectbox("Smoking Status", ["formerly smoked", "never smoked", "smokes", "Unknown"])
-    avg_glucose_level = st.number_input("Average Glucose Level (mg/dL)", min_value=50.0, max_value=300.0, value=100.0)
-    bmi = st.number_input("BMI (Body Mass Index)", min_value=10.0, max_value=60.0, value=22.0)
-
-# Center the button and result
-center_col = st.columns([1, 2, 1])[1]
-with center_col:
-    if st.button("Predict Stroke Risk"):
-        with st.spinner("Analyzing..."):
-            # Insert your prediction logic call here
-            result = {
-                "risk_level": "Low Risk",
-                "probability": "7%",
-                "explanation": "Keep up the good habits!",
-                "threshold": 30
-            }
-            st.markdown(f"### ✅ {result['risk_level']} — {result['explanation']}")
-            st.markdown(f"**Predicted Probability:** {result['probability']} &nbsp;|&nbsp; **Model Threshold:** {result['threshold']}%")
-
-    st.title("🩺 Stroke Risk Predictor")
-    st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
-
+    st.markdown("---")
     col1, col2 = st.columns(2)
+
     with col1:
-        height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
-        weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
+        height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0)
+        weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0)
 
     if height_cm > 0:
         bmi = weight_kg / ((height_cm / 100) ** 2)
@@ -174,15 +76,22 @@ with center_col:
 
     st.divider()
 
-    age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
-    gender = st.selectbox("⚧ Gender", ["Male", "Female"])
-    ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
-    Residence_type = st.selectbox("🏙️ Residence Type", ["Urban", "Rural"])
-    work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
-    smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
-    hypertension = st.selectbox("🩺 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-    heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-    avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
+    col1, col2 = st.columns(2)
+
+    with col1:
+        age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
+        gender = st.selectbox("⚧ Gender", ["Male", "Female"])
+        ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
+        Residence_type = st.selectbox("🏙️ Residence Type", ["Urban", "Rural"])
+        work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+
+    with col2:
+        smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+        hypertension = st.selectbox("🩺 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+        heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+        avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0)
+
+    st.markdown("")
 
     if st.button("🔍 Predict Stroke Risk"):
         with st.spinner("⏳ Predicting..."):
@@ -220,8 +129,8 @@ with center_col:
                         st.subheader(f"🧠 Stroke Risk Level: **{risk_level}**")
 
                         st.markdown(f"""
-                        **🧮 Your estimated stroke risk:** **{prob_percent} / 100**  
-                        _This means: Out of 100 people like you, around **{prob_percent} may experience a stroke**._
+                        **🧮 Estimated stroke risk:** **{prob_percent} / 100**  
+                        _Out of 100 people like you, around **{prob_percent} may experience a stroke**._
 
                         **🎯 Model threshold:** _{threshold_percent} / 100_  
                         {"If your score is **above** this threshold, you're considered **high risk**." if prob_percent >= threshold_percent else "Your score is **below** the threshold, so you're considered **low risk**."}
@@ -232,7 +141,7 @@ with center_col:
                         else:
                             st.success("✅ Low Risk — Keep up the good habits!")
 
-                        st.markdown(f"⏱️ **Latency:** `{latency}` ms")
+                        st.markdown(f"⏱️ **Prediction latency:** `{latency}` ms")
                 else:
                     st.error("❌ API error. Please try again.")
 
@@ -240,13 +149,11 @@ with center_col:
                 st.error(f"Request failed: {e}")
 
 
-
-# ------------------- TAB: ABOUT -------------------
-with tab_about:
+# ------------------- ABOUT -------------------
+elif page.startswith("📘"):
     st.header("📘 About This App")
     st.markdown("""
-    This stroke risk predictor was built to **raise public awareness** about stroke risk factors through an easy-to-use tool.  
-    You can enter basic health and lifestyle details, and the model will give an **estimated stroke risk**, based on a machine learning analysis of thousands of health records.
+    This stroke risk predictor was built to **raise public awareness** about stroke risk factors.
 
     ---
     **🎯 Goals:**
@@ -259,65 +166,51 @@ with tab_about:
     - Students & educators
     - Health-conscious individuals
 
-    This tool **does not replace professional medical advice**, but it can help spark meaningful discussions and awareness.
+    _This tool does not replace professional medical advice._
     """)
 
-# ------------------- TAB: HOW IT WORKS -------------------
-with tab_how:
+# ------------------- HOW IT WORKS -------------------
+elif page.startswith("🧠"):
     st.header("🧠 How It Works")
     st.markdown("""
-    ### 🧮 Input Data
+    ### 🧮 Inputs
     - **Demographics**: Age, Gender, Residence
-    - **Health Metrics**: BMI (auto-calculated), Glucose, Hypertension, Heart disease
-    - **Lifestyle**: Smoking status, Work type, Marital status
+    - **Health**: BMI, Glucose, Hypertension, Heart disease
+    - **Lifestyle**: Smoking, Work type, Marriage
 
-    ### ⚙️ Behind the Scenes
-    - A calibrated **XGBoost model** trained on stroke prediction data
-    - Custom **feature engineering**:
-        - BMI to Glucose ratios
-        - Smoker flag + Age interaction
-        - Cardio flags and logic overrides (e.g., very high BMI adds risk)
-    - Balanced with **SMOTE** to improve prediction on rare events
-    - Final output based on **threshold optimization for recall** (safety-first)
+    ### ⚙️ Model
+    - Calibrated **XGBoost**
+    - Engineered features (e.g. BMI/Glucose ratio, cardio flags)
+    - Balanced with **SMOTE** for rare event prediction
+    - Optimized threshold for **high recall** (safety-first)
 
     ### 🔎 Explainability
-    - Uses SHAP values to understand feature impact (not exposed here)
-    - Transparent thresholds shown to build trust
-    - Custom logic applied to override clearly unrealistic outputs
-
-    ---
-    _Built using Python, Streamlit, FastAPI, and XGBoost._
+    - SHAP values used internally
+    - Logic overrides ensure output sanity
     """)
 
-# ------------------- TAB: DISCLAIMER -------------------
-with tab_disclaimer:
+# ------------------- DISCLAIMER -------------------
+elif page.startswith("⚠️"):
     st.header("⚠️ Disclaimer")
     st.markdown("""
     This app is intended for **educational and awareness** purposes only.
 
-    - It is **not a medical device**.
-    - It does **not provide a diagnosis** or treatment recommendation.
-    - Always consult with a **qualified healthcare professional** for health concerns.
-
-    The model is based on patterns from anonymized public datasets and may not reflect individual clinical reality.
+    - It is **not a medical device**
+    - It does **not provide a diagnosis**
+    - Always consult a **licensed doctor** for medical advice
     """)
 
-# ------------------- TAB: REFERENCES -------------------
-with tab_references:
+# ------------------- REFERENCES -------------------
+elif page.startswith("📚"):
     st.header("📚 References")
     st.markdown("""
     **📂 Dataset**  
-    - [Kaggle Stroke Prediction Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)
+    - [Kaggle Stroke Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)
 
-    **🔬 ML & Libraries**  
+    **🔬 Tech**  
     - XGBoost, Scikit-learn, SHAP  
-    - Streamlit (Frontend)  
-    - FastAPI (Backend)
+    - Streamlit + FastAPI
 
-    **📜 Authorship & License**  
-    - Created by [KingCoderGithub](https://github.com/KingCoderGithub)  
-    - Open-sourced under MIT License  
-    - Educational project, not for commercial use
-
-    _If using this for teaching, citation is appreciated._  
+    **🛠 Built by:** [KingCoderGithub](https://github.com/KingCoderGithub)  
+    MIT Licensed — Educational use only.
     """)
