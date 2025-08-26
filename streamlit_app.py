@@ -143,55 +143,65 @@ with tab_home:
         Residence_type = st.selectbox("🏠 Residence Type", ["Urban", "Rural"])
         work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
 
-    if st.button("🔍 Predict Stroke Risk"):
-        payload = {
-            "age": age,
-            "hypertension": hypertension,
-            "heart_disease": heart_disease,
-            "avg_glucose_level": avg_glucose_level,
-            "bmi": bmi,
-            "gender": gender,
-            "ever_married": ever_married,
-            "Residence_type": Residence_type,
-            "smoking_status": smoking_status,
-            "work_type": work_type
-        }
+# Placeholder for result section (so page scrolls naturally)
+result_placeholder = st.empty()
 
-        import time
-        start_time = time.time()
+if st.button("🔍 Predict Stroke Risk"):
+    payload = {
+        "age": age,
+        "hypertension": hypertension,
+        "heart_disease": heart_disease,
+        "avg_glucose_level": avg_glucose_level,
+        "bmi": bmi,
+        "gender": gender,
+        "ever_married": ever_married,
+        "Residence_type": Residence_type,
+        "smoking_status": smoking_status,
+        "work_type": work_type
+    }
 
-        with st.spinner("Predicting..."):
-            try:
-                response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
-                latency = time.time() - start_time
+    with st.spinner("🔄 Predicting stroke risk..."):
+        try:
+            response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
+            if response.status_code == 200:
+                result = response.json()
 
-                if response.status_code == 200:
-                    result = response.json()
-                    if "error" in result:
-                        st.error(f"🚨 Server error: {result['error']}")
-                    else:
-                        probability = result.get("probability")
-                        percent = result.get("percent", probability * 100 if probability else 0)
-                        threshold = result.get("threshold")
-                        risk_level = result.get("risk_level", "Unknown").upper()
-
-                        prob_percent = round(percent)
-                        threshold_percent = round(threshold * 100)
-
-                        st.subheader(f"🧠 Stroke Risk Level: **{risk_level}**")
-                        st.markdown(f"**Estimated stroke risk:** `{prob_percent}/100`")
-                        st.markdown(f"**Model threshold:** `{threshold_percent}/100`")
-
-                        if prob_percent >= threshold_percent:
-                            st.error("🛑 High Risk — Please consider speaking with a doctor.")
-                        else:
-                            st.success("✅ Low Risk — Keep up the good habits!")
-
-                        st.caption(f"⏱ Prediction completed in {latency:.2f} seconds")
+                if "error" in result:
+                    result_placeholder.error(f"🚨 Server error: {result['error']}")
                 else:
-                    st.error("❌ API error. Please try again.")
-            except Exception as e:
-                st.error(f"Request failed: {e}")
+                    probability = result.get("probability")
+                    percent = result.get("percent", result.get("probability", 0) * 100)
+                    threshold = result.get("threshold")
+                    risk_level = result.get("risk_level", "Unknown").upper()
+
+                    prob_percent = round(percent)
+                    threshold_percent = round(threshold * 100)
+
+                    result_placeholder.subheader(f"🧠 Stroke Risk Level: {risk_level}")
+                    result_placeholder.markdown(
+                        f"""
+                        **Your estimated stroke risk:** **{prob_percent}/100**  
+                        _Out of 100 people like you, around **{prob_percent} may experience a stroke**._
+
+                        **Model threshold:** **{threshold_percent}/100**  
+                        {"If your score is **above** this threshold, you're considered **high risk**." if prob_percent >= threshold_percent else "You're considered **low risk**."}
+                        """
+                    )
+
+                    if prob_percent >= threshold_percent:
+                        result_placeholder.error("⚠️ High Risk — Please consult a healthcare provider.")
+                    else:
+                        result_placeholder.markdown(
+                            '<div style="background-color: #d4edda; color: #155724; padding: 10px 15px; border-radius: 5px; border: 1px solid #c3e6cb;">'
+                            '✅ <strong>Low Risk</strong> — Keep up the good habits!'
+                            '</div>',
+                            unsafe_allow_html=True
+                        )
+            else:
+                result_placeholder.error("❌ API error. Please try again.")
+        except Exception as e:
+            result_placeholder.error(f"Request failed: {e}")
+
 
 
 # ------------------- TAB: ABOUT -------------------
