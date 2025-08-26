@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import time
 
 # ------------------- PAGE CONFIG -------------------
 st.set_page_config(
@@ -8,22 +9,47 @@ st.set_page_config(
     layout="centered"
 )
 
+# ------------------- CUSTOM STYLING -------------------
+st.markdown("""
+    <style>
+    html, body, [class*="css"]  {
+        background-color: #f4f8fb;
+        font-family: 'Segoe UI', sans-serif;
+    }
+    .stApp {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+    }
+    h1, h2, h3, h4 {
+        color: #2c3e50;
+    }
+    .stButton>button {
+        background-color: #2c7be5;
+        color: white;
+        font-weight: 600;
+        border-radius: 10px;
+        padding: 0.6em 1.2em;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # ------------------- NAVIGATION TABS -------------------
 tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
     ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"]
 )
 
-# ------------------- TAB: HOME (Unchanged) -------------------
+# ------------------- TAB: HOME -------------------
 with tab_home:
     st.title("🩺 Stroke Risk Predictor")
     st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
 
-    age = st.number_input("Age", min_value=1, max_value=120, value=35)
-    hypertension = st.selectbox("Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-    heart_disease = st.selectbox("Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-    avg_glucose_level = st.number_input("Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
-    height_cm = st.number_input("Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
-    weight_kg = st.number_input("Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
+    age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
+    hypertension = st.selectbox("💓 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+    heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+    avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
+    height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
+    weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
 
     if height_cm > 0:
         bmi = weight_kg / ((height_cm / 100) ** 2)
@@ -31,11 +57,11 @@ with tab_home:
     else:
         bmi = 0
 
-    gender = st.selectbox("Gender", ["Male", "Female"])
-    ever_married = st.selectbox("Ever Married", ["Yes", "No"])
-    Residence_type = st.selectbox("Residence Type", ["Urban", "Rural"])
-    smoking_status = st.selectbox("Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
-    work_type = st.selectbox("Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+    gender = st.selectbox("🧑 Gender", ["Male", "Female"])
+    ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
+    Residence_type = st.selectbox("🏡 Residence Type", ["Urban", "Rural"])
+    smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+    work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
 
     if st.button("🔍 Predict Stroke Risk"):
         payload = {
@@ -51,9 +77,13 @@ with tab_home:
             "work_type": work_type
         }
 
-        with st.spinner("Predicting..."):
+        start_time = time.time()
+
+        with st.spinner("🔄 Predicting..."):
             try:
                 response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
+                latency = round((time.time() - start_time) * 1000)
+
                 if response.status_code == 200:
                     result = response.json()
 
@@ -72,21 +102,26 @@ with tab_home:
                         st.markdown(
                             f"""
                             **Your estimated stroke risk:** **{prob_percent} out of 100**  
-                            This means: _Out of 100 people like you, around **{prob_percent} may experience a stroke**._
+                            _Out of 100 people like you, around **{prob_percent}** may experience a stroke._
 
                             **Model threshold:** _{threshold_percent} out of 100_  
-                            {"If your score is **above** this threshold, you're considered **high risk**." if prob_percent >= threshold_percent else "Your score is **below** the threshold, so you're considered **low risk**."}
+                            {"You're considered **high risk**." if prob_percent >= threshold_percent else "You're considered **low risk**."}
+
+                            ⏱ **Prediction Time:** {latency} ms
                             """
                         )
 
                         if prob_percent >= threshold_percent:
-                            st.error("⚠️ Please consider speaking with a healthcare provider.")
+                            st.error("⚠️ High Risk: Please consider speaking with a healthcare provider.")
+                        elif prob_percent >= threshold_percent * 0.8:
+                            st.warning("⚠️ Moderate Risk: Monitor your health regularly.")
                         else:
-                            st.success("✅ Keep taking care of your health!")
+                            st.success("✅ Low Risk: Keep up the good habits!")
+
                 else:
                     st.error("❌ API error. Please try again.")
             except Exception as e:
-                st.error(f"Request failed: {e}")
+                st.error(f"❌ Request failed: {e}")
 
 # ------------------- TAB: ABOUT -------------------
 with tab_about:
@@ -168,4 +203,3 @@ with tab_references:
 
     _If using this for teaching, citation is appreciated._  
     """)
-
