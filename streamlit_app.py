@@ -19,7 +19,28 @@ st.markdown("""
         }
         /* Remove black header */
         header {visibility: hidden;}
+        /* Sidebar text color override */
+        section[data-testid="stSidebar"] .css-1v3fvcr, .css-1d391kg {
+            color: white !important;
+        }
 
+        /* Sidebar button text */
+        section[data-testid="stSidebar"] .css-1d3z3hw, .css-qri22k {
+            color: white !important;
+        }
+
+        /* Sidebar expand/collapse arrow override */
+        button[kind="header"] svg {
+            stroke: black !important;
+            fill: black !important;
+        }
+
+        /* Optional: fix for button outline */
+        button[kind="header"] {
+            border: none !important;
+            background: transparent !important;
+        }
+        
         /* Sidebar container */
         section[data-testid="stSidebar"] {
             background-color: #1d1d1f;
