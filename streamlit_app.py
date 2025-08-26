@@ -97,11 +97,10 @@ tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
     ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"]
 )
 
-# ------------------- TAB: HOME (Redesigned) -------------------
+# ------------------- TAB: HOME (Improved Layout) -------------------
 with tab_home:
     st.markdown("""
         <style>
-        /* Extend layout full width */
         .block-container {
             padding-top: 2rem;
             padding-bottom: 2rem;
@@ -109,15 +108,14 @@ with tab_home:
             padding-right: 2rem;
             max-width: 100%;
         }
-        /* Make success text always readable */
         .stAlert-success {
             background-color: #d1fae5 !important;
             color: #065f46 !important;
         }
-        /* Beautify input labels */
         label {
             font-weight: 500 !important;
         }
+        header { visibility: hidden; }
         </style>
     """, unsafe_allow_html=True)
 
@@ -137,13 +135,13 @@ with tab_home:
         height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
         weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
 
+        bmi = weight_kg / ((height_cm / 100) ** 2) if height_cm > 0 else 0
+        st.markdown(f"📊 **Calculated BMI:** `{bmi:.2f}`")
+
         gender = st.selectbox("👤 Gender", ["Male", "Female"])
         ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
         Residence_type = st.selectbox("🏠 Residence Type", ["Urban", "Rural"])
         work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
-
-    bmi = weight_kg / ((height_cm / 100) ** 2) if height_cm > 0 else 0
-    st.markdown(f"📊 **Calculated BMI:** `{bmi:.2f}`")
 
     if st.button("🔍 Predict Stroke Risk"):
         payload = {
@@ -181,26 +179,20 @@ with tab_home:
                         threshold_percent = round(threshold * 100)
 
                         st.subheader(f"🧠 Stroke Risk Level: **{risk_level}**")
-                        st.markdown(
-                            f"""
-                            **Estimated stroke risk:** `{prob_percent}/100`  
-                            _Out of 100 people like you, around **{prob_percent}** may experience a stroke._
-
-                            **Model threshold:** `{threshold_percent}/100`  
-                            {"🛑 **High Risk** — Consider speaking with a doctor." if prob_percent >= threshold_percent else "✅ **Low Risk** — Keep up the good habits!"}
-                            """
-                        )
+                        st.markdown(f"**Estimated stroke risk:** `{prob_percent}/100`")
+                        st.markdown(f"**Model threshold:** `{threshold_percent}/100`")
 
                         if prob_percent >= threshold_percent:
-                            st.error("⚠️ You're above the model’s threshold for high risk.")
+                            st.error("🛑 High Risk — Please consider speaking with a doctor.")
                         else:
-                            st.success("✅ Low Risk: Keep up the good habits!")
+                            st.success("✅ Low Risk — Keep up the good habits!")
 
                         st.caption(f"⏱ Prediction completed in {latency:.2f} seconds")
                 else:
                     st.error("❌ API error. Please try again.")
             except Exception as e:
                 st.error(f"Request failed: {e}")
+
 
 # ------------------- TAB: ABOUT -------------------
 with tab_about:
