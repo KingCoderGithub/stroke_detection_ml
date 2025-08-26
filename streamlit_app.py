@@ -8,28 +8,32 @@ st.set_page_config(
     page_icon="🧠",
     layout="centered"
 )
+
 # ------------------- CUSTOM STYLING -------------------
 st.markdown("""
     <style>
-        /* Set overall background color */
+        /* Expand page width */
+        .main .block-container {
+            max-width: 95%;
+            padding-left: 3rem;
+            padding-right: 3rem;
+        }
+
+        /* Set overall background */
         .stApp {
             background-color: #f4f6fa;
             font-family: 'Segoe UI', sans-serif;
         }
 
-        /* Title and headers */
-        h1, h2, h3, .stMarkdown h1, .stMarkdown h2 {
+        /* General text colors */
+        h1, h2, h3, h4, h5, h6,
+        .stMarkdown, .markdown-text-container, .stText, .stSelectbox, .stNumberInput {
             color: #102a43;
         }
 
-        /* Input fields */
-        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
-            color: #243b53;
+        /* Input labels */
+        label, .stRadio label, .stSelectbox label, .stNumberInput label {
             font-weight: 600;
-        }
-
-        /* Sidebar and widget labels */
-        .css-1v0mbdj, .css-1cpxqw2, .st-dj {
             color: #243b53;
         }
 
@@ -40,34 +44,49 @@ st.markdown("""
             font-weight: bold;
             border-radius: 8px;
             padding: 0.5em 1em;
-            transition: background-color 0.3s ease;
+            transition: 0.3s ease;
         }
         .stButton>button:hover {
             background-color: #173f5f;
             color: white;
         }
 
-        /* Tabs */
+        /* Tabs styling */
         .stTabs [role="tab"] {
             background-color: #dbe9f4;
             color: #102a43;
             font-weight: bold;
             border-radius: 0.5rem 0.5rem 0 0;
             padding: 8px 16px;
+            margin-right: 4px;
         }
         .stTabs [aria-selected="true"] {
             background-color: #20639b !important;
             color: white !important;
         }
 
-        /* Success, warning, error messages */
+        /* Subheader in results */
+        .stMarkdown h2 {
+            color: #173f5f;
+        }
+
+        /* Status messages */
         .stAlert {
             border-radius: 10px;
         }
 
-        /* Risk level subheader */
-        .stMarkdown h2 {
-            color: #173f5f;
+        /* Fix for markdown text inside tabs */
+        .stMarkdown p {
+            color: #102a43;
+            line-height: 1.6;
+        }
+
+        /* Ensure responsiveness on smaller screens */
+        @media (max-width: 768px) {
+            .main .block-container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
         }
     </style>
 """, unsafe_allow_html=True)
