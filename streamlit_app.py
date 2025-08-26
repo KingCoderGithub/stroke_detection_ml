@@ -8,31 +8,70 @@ st.set_page_config(
     page_icon="🧠",
     layout="centered"
 )
-
 # ------------------- CUSTOM STYLING -------------------
 st.markdown("""
     <style>
-    html, body, [class*="css"]  {
-        background-color: #f4f8fb;
-        font-family: 'Segoe UI', sans-serif;
-    }
-    .stApp {
-        background-color: #ffffff;
-        border-radius: 12px;
-        padding: 2rem;
-    }
-    h1, h2, h3, h4 {
-        color: #2c3e50;
-    }
-    .stButton>button {
-        background-color: #2c7be5;
-        color: white;
-        font-weight: 600;
-        border-radius: 10px;
-        padding: 0.6em 1.2em;
-    }
+        /* Set overall background color */
+        .stApp {
+            background-color: #f4f6fa;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        /* Title and headers */
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2 {
+            color: #102a43;
+        }
+
+        /* Input fields */
+        .stTextInput > label, .stNumberInput > label, .stSelectbox > label {
+            color: #243b53;
+            font-weight: 600;
+        }
+
+        /* Sidebar and widget labels */
+        .css-1v0mbdj, .css-1cpxqw2, .st-dj {
+            color: #243b53;
+        }
+
+        /* Buttons */
+        .stButton>button {
+            background-color: #20639b;
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            padding: 0.5em 1em;
+            transition: background-color 0.3s ease;
+        }
+        .stButton>button:hover {
+            background-color: #173f5f;
+            color: white;
+        }
+
+        /* Tabs */
+        .stTabs [role="tab"] {
+            background-color: #dbe9f4;
+            color: #102a43;
+            font-weight: bold;
+            border-radius: 0.5rem 0.5rem 0 0;
+            padding: 8px 16px;
+        }
+        .stTabs [aria-selected="true"] {
+            background-color: #20639b !important;
+            color: white !important;
+        }
+
+        /* Success, warning, error messages */
+        .stAlert {
+            border-radius: 10px;
+        }
+
+        /* Risk level subheader */
+        .stMarkdown h2 {
+            color: #173f5f;
+        }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ------------------- NAVIGATION TABS -------------------
 tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
