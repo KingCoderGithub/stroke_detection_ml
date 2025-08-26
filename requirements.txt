@@ -1,12 +1,12 @@
 streamlit==1.35.0
+fastapi==0.110.1
+uvicorn==0.29.0
+requests==2.31.0
+
 pandas==1.5.3
-numpy==1.24.4
-scipy==1.10.1
+numpy==1.23.5
 scikit-learn==1.2.2
 xgboost==2.0.3
-requests
-uvicorn==0.29.0  # or latest known stable
-fastapi
-uvicorn
-joblib
+scipy==1.10.1
+joblib==1.2.0
 imbalanced-learn==0.11.0

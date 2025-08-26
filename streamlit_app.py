@@ -12,6 +12,11 @@ st.set_page_config(
 # ------------------- CUSTOM STYLING FOR SIDEBAR & PAGE -------------------
 st.markdown("""
     <style>
+        /* Make the sidebar toggle arrow more visible (black) */
+        button[kind="icon"] svg {
+            stroke: black !important;
+            fill: black !important;
+        }
         /* Remove black header */
         header {visibility: hidden;}
 
@@ -117,47 +122,58 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ------------------- SIDEBAR NAVIGATION -------------------
+st.markdown("""
+    <style>
+    [data-testid="stSidebar"] h1 {
+        color: white !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 st.sidebar.title("🧭 Navigation")
 page = st.sidebar.radio("Go to", ["🏠 Home", "📘 About", "🧠 How It Works", "⚠️ Disclaimer", "📚 References"])
 
 # ------------------- HOME -------------------
 if page.startswith("🏠"):
-    st.markdown("## 🧠 Stroke Risk Predictor")
-    st.markdown("Estimate your risk of stroke based on your health and lifestyle. _This tool is for awareness only._")
+    st.markdown("## Stroke Risk Predictor")
+    st.markdown("🩺 **Know Your Risk. Act Early.** A simple tool to **estimate your stroke risk** using everyday health info.")
     st.markdown("---")
 
-    # --- HEIGHT, WEIGHT, BMI block ---
-    with st.container():
-        col1, col2, col3 = st.columns([1.1, 1.1, 0.8])
-        with col1:
-            height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0)
-        with col2:
-            weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0)
-        with col3:
-            if height_cm > 0:
-                bmi = weight_kg / ((height_cm / 100) ** 2)
-                st.markdown(f"**💡 BMI:** `{bmi:.2f}`")
-            else:
-                bmi = 0
+    # --- PERSONAL + HEALTH INFO ---
+    st.subheader("👤 Personal & Health Information")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        age = st.number_input("🎂 Age", min_value=0, max_value=120, value=30, step=1)
+        gender = st.selectbox("🚻 Gender", ["Male", "Female"])
+        ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
+        Residence_type = st.selectbox("🏠 Residence Type", ["Urban", "Rural"])
+        work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+
+    with col2:
+        smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
+        hypertension = st.selectbox("💢 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+        heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
+        avg_glucose_level = st.number_input("🩸 Avg. Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
 
     st.markdown("")
 
-    # --- Health + Lifestyle Inputs ---
-    with st.container():
-        col1, col2 = st.columns(2)
+    # --- HEIGHT, WEIGHT, BMI block ---
+    st.subheader("📏 Height, Weight & BMI")
+    col3, col4, col5 = st.columns([1.2, 1.2, 0.8])
 
-        with col1:
-            age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
-            gender = st.selectbox("⚧ Gender", ["Male", "Female"])
-            ever_married = st.selectbox("💍 Ever Married", ["Yes", "No"])
-            Residence_type = st.selectbox("🏙️ Residence Type", ["Urban", "Rural"])
-            work_type = st.selectbox("💼 Work Type", ["Kid", "Govt_job", "Never_worked", "Private", "Self-employed"])
+    with col3:
+        height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
 
-        with col2:
-            smoking_status = st.selectbox("🚬 Smoking Status", ["Formerly smoked", "Never smoked", "Smokes", "Unknown"])
-            hypertension = st.selectbox("🩺 Hypertension (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-            heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
-            avg_glucose_level = st.number_input("🩸 Avg. Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0)
+    with col4:
+        weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
+
+    with col5:
+        if height_cm > 0:
+            bmi = weight_kg / ((height_cm / 100) ** 2)
+            st.markdown(f"**💡 BMI:** `{bmi:.2f}`")
+        else:
+            bmi = 0
 
     # --- Predict Button ---
     st.markdown("")
@@ -208,17 +224,24 @@ if page.startswith("🏠"):
                         """)
 
                         if prob_percent >= threshold_percent:
-                            st.error("🚨 High Risk — Please consider speaking with a healthcare provider.")
+                            st.markdown(
+                                "<p style='color: black; font-weight: bold; font-size: 18px;'>🚨 High Risk — Please consider speaking with a healthcare provider.</p>",
+                                unsafe_allow_html=True
+                            )
                         else:
-                            st.success("✅ Low Risk — Keep up the good habits!")
+                            st.markdown("""
+                                <div style='background-color: #d4edda; padding: 1rem; border-radius: 0.5rem; color: black; font-size: 1.1rem;'>
+                                    ✅ <b>Low Risk</b> — Keep up the good habits!
+                                </div>
+                            """, unsafe_allow_html=True)
 
                         st.markdown(f"⏱️ **Prediction latency:** `{latency}` ms")
                         st.markdown('<script>document.getElementById("results").scrollIntoView({behavior: "smooth"});</script>', unsafe_allow_html=True)
                 else:
                     st.error("❌ API error. Please try again.")
-
             except Exception as e:
                 st.error(f"Request failed: {e}")
+
 
 
 # ------------------- ABOUT -------------------

@@ -43,9 +43,17 @@ def feature_engineering(df):
         labels=glucose_labels
     )
 
+    # Normalize smoking_status first
+    df['smoking_status'] = df['smoking_status'].astype(str).str.strip().str.lower()
+
+    # Then map to 0/1
     df['smoker_flag'] = df['smoking_status'].replace({
-    'Smokes': 1, 'Formerly smoked': 1, 'Never smoked': 0, 'Unknown': 0
+        'smokes': 1,
+        'formerly smoked': 1,
+        'never smoked': 0,
+        'unknown': 0
     }).astype("int64")
+
 
 
     df['senior_flag'] = (df['age'] >= 65).astype(int)
