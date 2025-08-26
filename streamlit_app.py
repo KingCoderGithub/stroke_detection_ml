@@ -100,32 +100,74 @@ tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
 
 # ------------------- HOME TAB -------------------
 with tab_home:
+    # --- Scoped Styling for Home Tab Only ---
     st.markdown("""
-    <style>
-    body {
-        background-color: #2c1b3c;
-        color: #f5d76e;
-    }
-    .stApp {
-        background-color: #2c1b3c;
-        color: #f5d76e;
-    }
-    h1, h2, h3, .stMarkdown, label, div, p {
-        color: #f5d76e !important;
-    }
-    .st-bb {
-        background-color: #2c1b3c !important;
-    }
-    </style>
-""", unsafe_allow_html=True)
+        <style>
+            .stApp {
+                background-color: #450202;
+                color: #fceabb;
+            }
+
+            h1, h2, h3, .stMarkdown, label, div, p {
+                color: #fceabb !important;
+            }
+
+            .st-bb {
+                background-color: #450202 !important;
+            }
+
+            .stButton>button {
+                background-color: #ffd700 !important;
+                color: #450202 !important;
+                font-weight: bold;
+                border-radius: 8px;
+                padding: 0.5em 1.2em;
+            }
+            .stButton>button:hover {
+                background-color: #fceabb !important;
+                color: #450202 !important;
+            }
+
+            .stTabs [role="tab"] {
+                background-color: #fceabb;
+                color: #450202;
+                font-weight: bold;
+                border-radius: 0.5rem 0.5rem 0 0;
+                padding: 8px 16px;
+                margin-right: 4px;
+            }
+
+            .stTabs [aria-selected="true"] {
+                background-color: #ffd700 !important;
+                color: #450202 !important;
+            }
+
+            .stAlert-success {
+                background-color: #fceabb !important;
+                color: #450202 !important;
+                font-weight: bold;
+            }
+
+            .stAlert-error {
+                background-color: #8b0000 !important;
+                color: #fff8dc !important;
+                font-weight: bold;
+            }
+
+            .block-container {
+                padding: 2rem 4rem;
+                max-width: 100% !important;
+            }
+        </style>
+    """, unsafe_allow_html=True)
 
     st.title("🩺 Stroke Risk Predictor")
     st.markdown("Enter your health details below to estimate your stroke risk. This tool is for awareness purposes only.")
 
+    # --- Input Layout ---
     col1, col2 = st.columns(2)
     with col1:
-     height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
-    with col2:
+        height_cm = st.number_input("📏 Height (cm)", min_value=50.0, max_value=250.0, value=170.0, step=1.0)
         weight_kg = st.number_input("⚖️ Weight (kg)", min_value=10.0, max_value=300.0, value=65.0, step=1.0)
 
     if height_cm > 0:
@@ -133,6 +175,8 @@ with tab_home:
         st.markdown(f"**💡 Calculated BMI:** `{bmi:.2f}`")
     else:
         bmi = 0
+
+    st.divider()
 
     age = st.number_input("📆 Age", min_value=1, max_value=120, value=35)
     gender = st.selectbox("⚧ Gender", ["Male", "Female"])
@@ -144,11 +188,8 @@ with tab_home:
     heart_disease = st.selectbox("❤️ Heart Disease (Diagnosed)", [0, 1], format_func=lambda x: "No" if x == 0 else "Yes")
     avg_glucose_level = st.number_input("🩸 Average Glucose Level (mg/dL)", min_value=40.0, max_value=400.0, value=100.0, step=1.0)
 
-    # Predict button with scroll and response
+    # --- Predict Button ---
     if st.button("🔍 Predict Stroke Risk"):
-        # Inject anchor for scrolling
-        components.html("<script>window.location.href = '#prediction-result'</script>", height=0)
-
         with st.spinner("⏳ Predicting..."):
             start = time.time()
             payload = {
@@ -167,7 +208,6 @@ with tab_home:
             try:
                 response = requests.post("https://stroke-detection-ml.onrender.com/predict", json=payload)
                 latency = round((time.time() - start) * 1000)
-                st.markdown('<a name="prediction-result"></a>', unsafe_allow_html=True)
 
                 if response.status_code == 200:
                     result = response.json()
@@ -197,7 +237,7 @@ with tab_home:
                         else:
                             st.success("✅ Low Risk — Keep up the good habits!")
 
-                        st.markdown(f"⏱️ **Latency:** {latency} ms")
+                        st.markdown(f"⏱️ **Latency:** `{latency}` ms")
                 else:
                     st.error("❌ API error. Please try again.")
 
