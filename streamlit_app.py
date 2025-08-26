@@ -13,91 +13,73 @@ st.set_page_config(
 # ------------------- CUSTOM STYLING -------------------
 st.markdown("""
     <style>
-        /* Expand page width */
-        .main .block-container {
-            max-width: 95%;
-            padding-left: 3rem;
-            padding-right: 3rem;
+        /* Full-width layout */
+        .block-container {
+            max-width: 100% !important;
+            padding: 2rem 4rem;
         }
 
-        /* Set overall background */
-        .stApp {
-            background-color: #1f2e1e;
-            font-family: 'Segoe UI', sans-serif;
+        /* Background and text colors */
+        .stApp, .stApp body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
         }
 
-        /* General text colors */
-        h1, h2, h3, h4, h5, h6,
-        .stMarkdown, .markdown-text-container, .stText, .stSelectbox, .stNumberInput {
-            color: #fefae0;
+        /* Titles and headings */
+        h1, h2, h3, .stMarkdown h1, .stMarkdown h2 {
+            color: #1d1d1f;
+            font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
         }
 
-        /* Input labels */
-        label, .stRadio label, .stSelectbox label, .stNumberInput label {
-            font-weight: 600;
-            color: #fefae0;
+        /* Inputs and labels */
+        label, .stNumberInput label, .stSelectbox label {
+            color: #1d1d1f;
+            font-weight: 400;
         }
 
         /* Buttons */
         .stButton>button {
-            background-color: #4a5f4a;
-            color: #fefae0;
-            font-weight: bold;
+            background-color: #1d1d1f;
+            color: #ffffff;
             border-radius: 8px;
-            padding: 0.5em 1em;
-            transition: 0.3s ease;
+            border: none;
+            padding: 0.6em 1.2em;
+            font-weight: 600;
+            font-size: 1rem;
         }
         .stButton>button:hover {
-            background-color: #3b4b3b;
-            color: #fefae0;
+            background-color: #444;
         }
 
-        /* Tabs styling */
-        .stTabs [role="tab"] {
-            background-color: #4a5f4a;
-            color: #fefae0;
-            font-weight: bold;
-            border-radius: 0.5rem 0.5rem 0 0;
-            padding: 8px 16px;
-            margin-right: 4px;
-        }
-        .stTabs [aria-selected="true"] {
-            background-color: #6c8f6c !important;
-            color: #1f2e1e !important;
-        }
-
-        /* Subheader in results */
-        .stMarkdown h2 {
-            color: #fefae0;
-        }
-
-        /* Status messages */
+        /* Success and error messages */
         .stAlert-success {
-            background-color: #fefae0 !important;
-            color: #1f2e1e !important;
-            font-weight: bold;
+            background-color: #d1f2e4 !important;
+            color: #0a3d62 !important;
         }
         .stAlert-error {
-            background-color: #5c4033 !important;
-            color: #fefae0 !important;
-            font-weight: bold;
+            background-color: #fdecea !important;
+            color: #6a0a0a !important;
         }
 
-        /* Fix for markdown text inside tabs */
-        .stMarkdown p {
-            color: #fefae0;
-            line-height: 1.6;
+        /* Clean and spacious layout for input fields */
+        .stNumberInput, .stSelectbox {
+            margin-bottom: 1.2rem;
         }
 
-        /* Ensure responsiveness on smaller screens */
-        @media (max-width: 768px) {
-            .main .block-container {
-                padding-left: 1rem;
-                padding-right: 1rem;
-            }
+        /* Use neutral style for tabs */
+        .stTabs [role="tab"] {
+            background-color: transparent;
+            color: #1d1d1f;
+            font-weight: 600;
+            padding: 0.6rem 1.2rem;
+            margin-right: 0.4rem;
+        }
+        .stTabs [aria-selected="true"] {
+            border-bottom: 2px solid #1d1d1f;
         }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ------------------- NAVIGATION TABS -------------------
 tab_home, tab_about, tab_how, tab_disclaimer, tab_references = st.tabs(
