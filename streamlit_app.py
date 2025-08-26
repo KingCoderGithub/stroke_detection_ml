@@ -259,7 +259,11 @@ if page.startswith("🏠"):
                         st.markdown(f"⏱️ **Prediction latency:** `{latency}` ms")
                         st.markdown('<script>document.getElementById("results").scrollIntoView({behavior: "smooth"});</script>', unsafe_allow_html=True)
                 else:
-                    st.error("❌ API error. Please try again.")
+                    st.markdown("""
+                                <div style='background-color: #d4edda; padding: 1rem; border-radius: 0.5rem; color: black; font-size: 1.1rem;'>
+                                    ❌ <b>API ERROR</b> — Please try again.
+                                </div>
+                            """, unsafe_allow_html=True)
             except Exception as e:
                 st.error(f"Request failed: {e}")
 
