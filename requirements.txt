@@ -6,3 +6,7 @@ scikit-learn==1.2.2
 xgboost==2.0.3
 requests
 uvicorn==0.29.0  # or latest known stable
+fastapi
+uvicorn
+joblib
+
