@@ -267,7 +267,7 @@ if page.startswith("🏠"):
 
 # ------------------- ABOUT -------------------
 elif page.startswith("📘"):
-    st.header("📘 About This App")
+    st.markdown("<h2 style='color: white;'>📘 About </h2>", unsafe_allow_html=True)
     st.markdown("""
     This stroke risk predictor was built to **raise public awareness** about stroke risk factors.
 
@@ -287,7 +287,7 @@ elif page.startswith("📘"):
 
 # ------------------- HOW IT WORKS -------------------
 elif page.startswith("🧠"):
-    st.header("🧠 How It Works")
+    st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
     st.markdown("""
     ### 🧮 Inputs
     - **Demographics**: Age, Gender, Residence
@@ -307,7 +307,7 @@ elif page.startswith("🧠"):
 
 # ------------------- DISCLAIMER -------------------
 elif page.startswith("⚠️"):
-    st.header("⚠️ Disclaimer")
+    st.markdown("<h2 style='color: white;'>⚠️ Disclaimer!</h2>", unsafe_allow_html=True)
     st.markdown("""
     This app is intended for **educational and awareness** purposes only.
 
@@ -318,7 +318,7 @@ elif page.startswith("⚠️"):
 
 # ------------------- REFERENCES -------------------
 elif page.startswith("📚"):
-    st.header("📚 References")
+    st.markdown("<h2 style='color: white;'>📚 References</h2>", unsafe_allow_html=True)
     st.markdown("""
     **📂 Dataset**  
     - [Kaggle Stroke Dataset](https://www.kaggle.com/datasets/fedesoriano/stroke-prediction-dataset)
