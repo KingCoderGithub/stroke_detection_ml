@@ -13,38 +13,33 @@ st.set_page_config(
 st.markdown("""
     <style>
         /* Make the sidebar toggle arrow more visible (black) */
-        button[kind="icon"] svg {
-            stroke: black !important;
-            fill: black !important;
-        }
-        /* Remove black header */
-        header {visibility: hidden;}
-        /* Sidebar text color override */
-        section[data-testid="stSidebar"] .css-1v3fvcr, .css-1d391kg {
-            color: white !important;
-        }
-
-        /* Sidebar button text */
-        section[data-testid="stSidebar"] .css-1d3z3hw, .css-qri22k {
-            color: white !important;
-        }
-
-        /* Sidebar expand/collapse arrow override */
-        button[kind="header"] svg {
+        button[kind="icon"] svg, button[kind="header"] svg {
             stroke: black !important;
             fill: black !important;
         }
 
-        /* Optional: fix for button outline */
-        button[kind="header"] {
-            border: none !important;
-            background: transparent !important;
+        /* 🔹 Force ALL headings (main app) to black */
+        h1, h2, h3, h4, h5, h6 {
+            color: #000000 !important;
         }
-        
-        /* Sidebar container */
+
+        /* 🔹 Sidebar text color (desktop + mobile) */
         section[data-testid="stSidebar"] {
             background-color: #1d1d1f;
             padding: 2rem 1rem;
+        }
+        section[data-testid="stSidebar"] * {
+            color: #ffffff !important;   /* force all sidebar text white */
+        }
+
+        /* 🔹 Sidebar hover + selected state */
+        section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label:hover {
+            background-color: #3a3a3c;
+            color: #ffffff !important;
+        }
+        section[data-testid="stSidebar"] .stRadio div[role="radiogroup"] > label[data-selected="true"] {
+            background-color: #007aff;
+            color: #ffffff !important;
         }
 
         /* Sidebar radio group as Notion-style cards */
@@ -53,10 +48,8 @@ st.markdown("""
             flex-direction: column;
             gap: 1.2rem;
         }
-
         .stRadio div[role="radiogroup"] > label {
             background-color: #2c2c2e;
-            color: #ffffff;
             padding: 1rem 1.2rem;
             border-radius: 12px;
             font-weight: 600;
@@ -65,21 +58,13 @@ st.markdown("""
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
-
         .stRadio div[role="radiogroup"] > label:hover {
             background-color: #3a3a3c;
             transform: translateX(6px);
         }
-
         .stRadio div[role="radiogroup"] > label[data-selected="true"] {
             background-color: #007aff;
-            color: #ffffff;
             transform: scale(1.02);
-        }
-
-        /* Make sidebar text white and arrow visible */
-        .css-1v3fvcr, .css-1dp5vir {
-            color: white !important;
         }
 
         /* Main app container */
@@ -93,10 +78,6 @@ st.markdown("""
             background-color: #f5f5f7;
             color: #1d1d1f;
             font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Helvetica Neue", sans-serif;
-        }
-
-        h1, h2, h3 {
-            color: #1d1d1f;
         }
 
         /* Inputs and labels */
@@ -119,7 +100,6 @@ st.markdown("""
             padding: 0.6rem 1.5rem;
             transition: background-color 0.2s ease;
         }
-
         .stButton>button:hover {
             background-color: #333333;
         }
@@ -129,7 +109,6 @@ st.markdown("""
             background-color: #d1f2e4 !important;
             color: #0a3d62 !important;
         }
-
         .stAlert-error {
             background-color: #fdecea !important;
             color: #6a0a0a !important;
