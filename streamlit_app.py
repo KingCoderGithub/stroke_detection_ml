@@ -349,5 +349,5 @@ elif page.startswith("📚"):
 
     **🛠 Built by:** [KingCoderGithub](https://github.com/KingCoderGithub)  
     https://github.com/KingCoderGithub/stroke_detection_ml.git
-    MIT Licensed — Educational use only.
+    - MIT Licensed — Educational use only.
     """)
