@@ -3,6 +3,8 @@
 
 **A portfolio-focused ML project built for public health awareness and undergraduate CS/Data Science credibility (Fall 2026 cycle).**
 
+Link - https://strokedetectionml.streamlit.app/#bf865f99
+
 ---
 
 ## 🧠 Smart Risk. Real Logic. Fast Inference.
