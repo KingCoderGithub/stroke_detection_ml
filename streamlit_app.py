@@ -329,35 +329,40 @@ elif page.startswith("🧠"):
 elif page.startswith("📘"):
     st.markdown("<h2 style='color: black;'>📘 About This Project</h2>", unsafe_allow_html=True)
     st.markdown("""
-    Stroke remains one of the world’s leading causes of preventable disability, yet awareness and early risk screening are often limited by complexity or cost.
+    Stroke remains one of the leading global causes of long-term disability, but early risk awareness can enable prevention and faster medical response.
 
-    This project was built by a high-school student to demonstrate how **machine learning can be applied responsibly and effectively in public health education**.  
-    The system combines:
-    - a **FastAPI backend** for fast predictions, and  
-    - a **Streamlit interface** for a clean, accessible user experience.
+    This project was created to explore how machine learning can be used in public health tools that are **fast, interpretable and responsible**.
 
-    ### ⚙️ How It Works (Simplified)
-    1. Users input everyday health and lifestyle details such as **age, BMI, glucose level, smoking status, residence type, marital history, hypertension, heart condition, and occupation**.
-    2. Those values are processed through a trained **XGBoost-based ML pipeline**, optimised to detect **rare high-risk stroke cases** instead of just maximising general accuracy.
-    3. The model outputs a **probability score and risk category**, explaining results using recent SHAP interpretability graphs to show which features influence risk most.
-    4. **Safety logic overrides** are applied **without retraining**, ensuring unrealistic medical values (e.g., physically impossible BMI or glucose) are flagged and adjusted so risk estimates remain clinically reasonable and educationally safe.
+    The system uses an **end-to-end ML pipeline powered by XGBoost**, connected to a lightweight API backend and an awareness-focused Streamlit interface.
+
+    ### ⚙️ How It Works (Reader-Friendly)
+    1. You enter basic demographic, health and lifestyle details (age, BMI, average glucose, smoking habits, residence type, occupation, etc.).
+    2. The model processes these using engineered interactions and medical-sanity checks.
+    3. It generates a **stroke risk probability and category (Low / High / Moderate)**.
+    4. The prediction is supported by SHAP explainability graphs so you can understand *why* the model scored the way it did.
+
+    ### 📊 Performance Snapshot (previous validation benchmarks)
+    - During early development, the model reached **~80–90% overall accuracy** on hold-out validation, showing strong general reliability on mixed health inputs.
+    - On more rigorous testing focused on rare high-risk stroke detection, it maintained balanced **precision (~57%) and recall (~51%)**, with **PR-AUC > 0.54**, indicating it performs meaningfully better than random for identifying stroke cases in an imbalanced dataset.
 
     ### 🎯 Project Goals
     - Increase **public stroke risk awareness**
-    - Provide **fast, easy, working predictions (<500 ms target)**
-    - Make ML decisions **transparent, interpretable, and medically realistic**
-    - Encourage users to seek **early professional guidance when risk is elevated**
+    - Provide **fast predictions (targeting <500 ms)**
+    - Keep outputs **medically realistic using logic-based guards**
+    - Make model decisions **interpretable, transparent, and educationally trustworthy**
+    - Encourage early discussion with a healthcare professional when necessary
 
-    ### 🧠 Skills Demonstrated
-    - Building **end-to-end ML inference systems**
-    - API deployment with **FastAPI**
-    - Interactive front-end design with **Streamlit**
-    - Responsible AI logic for **health-aware sanity checks**
-    - Model evaluation using **PR AUC, F1, calibration, and SHAP explainability**
+    ### 🧠 What This Project Demonstrates About Me
+    - Building a deployed ML inference system from start to finish
+    - Understanding medical AI limitations and real validation metrics
+    - Applying responsible logic instead of blindly trusting model outputs
+    - Prioritising interpretability (SHAP) and rare-event evaluation (PR-AUC, F1, calibration)
+    - Connecting backend APIs with a reliable, easiest-paths-that-work mindset
 
-    > ⚠️ *This is not a diagnostic medical device and does not replace advice from a licensed healthcare professional.*
-    > It is an educational and awareness tool designed to show how AI can be used safely in healthcare without compromising user trust or safety.
+    > ⚠️ This tool is **not a diagnosis**, but a **stroke risk awareness estimator** for educational purposes.
+    It does not replace professional advice from a licensed doctor.
     """)
+
 
 # ------------------- DISCLAIMER -------------------
 elif page.startswith("⚠️"):
