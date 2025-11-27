@@ -248,45 +248,81 @@ if page.startswith("🏠"):
 
 
 
-# ------------------- ABOUT -------------------
-elif page.startswith("📘"):
-    st.markdown("<h2 style='color: black;'>📘 About</h2>", unsafe_allow_html=True)
-    st.markdown("""
-    This project is a **machine-learning powered stroke risk estimation app**
-    built to make AI in healthcare understandable, responsible, and user-friendly.
-
-    ### 🚀 Key upgrades added recently:
-    - **SHAP explainability plots** to show feature contributions
-    - **Model calibration & PR AUC metrics** for better rare-risk reliability
-    - **Safety logic** for unrealistic BMI and glucose inputs
-    - **Improved UI/UX** for clarity and public trust
-
-    ### 📌 Purpose:
-    - Raise health awareness
-    - Encourage early preventive care
-    - Demonstrate responsible AI practices
-
-    _This tool does not replace professional medical advice._
-    """)
 
 # ------------------- HOW IT WORKS -------------------
 elif page.startswith("🧠"):
-    st.markdown("<h2 style='color: black;'>🧠 How It Works</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
     st.markdown("""
     ### 🧮 Inputs
-    - Demographics: age, gender, residence
-    - Health: BMI, glucose, hypertension, heart condition
-    - Lifestyle: smoking status, occupation, marital status
+    - **Demographics**: Age, Gender, Residence
+    - **Health**: BMI, Glucose, Hypertension, Heart disease
+    - **Lifestyle**: Smoking, Work type, Marriage
 
-    ### ⚙️ Model pipeline
-    - Preprocessing: imputation, scaling, one-hot encoding
-    - Classifier: XGBoost
-    - Training-time balancing used SMOTE (not applied at inference)
-    - Decision threshold optimised for high recall
+    ### ⚙️ Model
+    - Calibrated **XGBoost** classifier
+    - Engineered features (e.g. BMI/Glucose ratio, cardio flags, interaction terms)
+    - Balanced with **SMOTE** so the model sees more stroke cases during training
+    - Threshold tuned for **high recall** (prioritising catching high-risk cases)
 
-    ### 🔎 Explainability & Safety
-    - SHAP summary + force plots explain predictions
-    - Logic-based overrides ensure medically realistic outputs
+    ### 🔎 Explainability (SHAP)
+    We use **SHAP (SHapley Additive exPlanations)** to understand which features
+    are pushing the prediction higher or lower for each person.
+    """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image(
+            "reports/shap_summary.png",
+            caption="Global feature importance — which features most influence stroke risk overall",
+            use_column_width=True,
+        )
+
+    with col2:
+        st.image(
+            "reports/shap_force_example_0.png",
+            caption="Example SHAP explanation for one person’s prediction",
+            use_column_width=True,
+        )
+
+    st.markdown("""
+    These plots help make the model less of a “black box” by showing how inputs
+    like age, BMI, glucose and smoking status contribute to the final risk score.
+    """)
+
+
+# ------------------- ABOUT -------------------
+elif page.startswith("📘"):
+    st.markdown("<h2 style='color: black;'>📘 About This Project</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    Stroke remains one of the world’s leading causes of preventable disability, yet awareness and early risk screening are often limited by complexity or cost.
+
+    This project was built by a high-school student to demonstrate how **machine learning can be applied responsibly and effectively in public health education**.  
+    The system combines:
+    - a **FastAPI backend** for fast predictions, and  
+    - a **Streamlit interface** for a clean, accessible user experience.
+
+    ### ⚙️ How It Works (Simplified)
+    1. Users input everyday health and lifestyle details such as **age, BMI, glucose level, smoking status, residence type, marital history, hypertension, heart condition, and occupation**.
+    2. Those values are processed through a trained **XGBoost-based ML pipeline**, optimised to detect **rare high-risk stroke cases** instead of just maximising general accuracy.
+    3. The model outputs a **probability score and risk category**, explaining results using recent SHAP interpretability graphs to show which features influence risk most.
+    4. **Safety logic overrides** are applied **without retraining**, ensuring unrealistic medical values (e.g., physically impossible BMI or glucose) are flagged and adjusted so risk estimates remain clinically reasonable and educationally safe.
+
+    ### 🎯 Project Goals
+    - Increase **public stroke risk awareness**
+    - Provide **fast, easy, working predictions (<500 ms target)**
+    - Make ML decisions **transparent, interpretable, and medically realistic**
+    - Encourage users to seek **early professional guidance when risk is elevated**
+
+    ### 🧠 Skills Demonstrated
+    - Building **end-to-end ML inference systems**
+    - API deployment with **FastAPI**
+    - Interactive front-end design with **Streamlit**
+    - Responsible AI logic for **health-aware sanity checks**
+    - Model evaluation using **PR AUC, F1, calibration, and SHAP explainability**
+
+    > ⚠️ *This is not a diagnostic medical device and does not replace advice from a licensed healthcare professional.*
+    > It is an educational and awareness tool designed to show how AI can be used safely in healthcare without compromising user trust or safety.
     """)
 
 # ------------------- DISCLAIMER -------------------
