@@ -249,66 +249,44 @@ if page.startswith("🏠"):
 
 
 # ------------------- ABOUT -------------------
-# ------------------- HOW IT WORKS -------------------
-elif page.startswith("🧠"):
-    st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
+elif page.startswith("📘"):
+    st.markdown("<h2 style='color: black;'>📘 About</h2>", unsafe_allow_html=True)
     st.markdown("""
-    ### 🧮 Inputs
-    - **Demographics**: Age, Gender, Residence
-    - **Health**: BMI, Glucose, Hypertension, Heart disease
-    - **Lifestyle**: Smoking, Work type, Marriage
+    This project is a **machine-learning powered stroke risk estimation app**
+    built to make AI in healthcare understandable, responsible, and user-friendly.
 
-    ### ⚙️ Model
-    - Calibrated **XGBoost** classifier
-    - Engineered features (e.g. BMI/Glucose ratio, cardio flags, interaction terms)
-    - Balanced with **SMOTE** so the model sees more stroke cases during training
-    - Threshold tuned for **high recall** (prioritising catching high-risk cases)
+    ### 🚀 Key upgrades added recently:
+    - **SHAP explainability plots** to show feature contributions
+    - **Model calibration & PR AUC metrics** for better rare-risk reliability
+    - **Safety logic** for unrealistic BMI and glucose inputs
+    - **Improved UI/UX** for clarity and public trust
 
-    ### 🔎 Explainability (SHAP)
-    We use **SHAP (SHapley Additive exPlanations)** to understand which features
-    are pushing the prediction higher or lower for each person.
+    ### 📌 Purpose:
+    - Raise health awareness
+    - Encourage early preventive care
+    - Demonstrate responsible AI practices
+
+    _This tool does not replace professional medical advice._
     """)
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.image(
-            "reports/shap_summary.png",
-            caption="Global feature importance — which features most influence stroke risk overall",
-            use_column_width=True,
-        )
-
-    with col2:
-        st.image(
-            "reports/shap_force_example_0.png",
-            caption="Example SHAP explanation for one person’s prediction",
-            use_column_width=True,
-        )
-
-    st.markdown("""
-    These plots help make the model less of a “black box” by showing how inputs
-    like age, BMI, glucose and smoking status contribute to the final risk score.
-    """)
-
 
 # ------------------- HOW IT WORKS -------------------
 elif page.startswith("🧠"):
-    st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='color: black;'>🧠 How It Works</h2>", unsafe_allow_html=True)
     st.markdown("""
     ### 🧮 Inputs
-    - **Demographics**: Age, Gender, Residence
-    - **Health**: BMI, Glucose, Hypertension, Heart disease
-    - **Lifestyle**: Smoking, Work type, Marriage
+    - Demographics: age, gender, residence
+    - Health: BMI, glucose, hypertension, heart condition
+    - Lifestyle: smoking status, occupation, marital status
 
-    ### ⚙️ Model
-    - Calibrated **XGBoost**
-    - Engineered features (e.g. BMI/Glucose ratio, cardio flags)
-    - Balanced with **SMOTE** for rare event prediction
-    - Optimized threshold for **high recall** (safety-first)
+    ### ⚙️ Model pipeline
+    - Preprocessing: imputation, scaling, one-hot encoding
+    - Classifier: XGBoost
+    - Training-time balancing used SMOTE (not applied at inference)
+    - Decision threshold optimised for high recall
 
-    ### 🔎 Explainability
-    - SHAP values used internally
-    - Logic overrides ensure output sanity
+    ### 🔎 Explainability & Safety
+    - SHAP summary + force plots explain predictions
+    - Logic-based overrides ensure medically realistic outputs
     """)
 
 # ------------------- DISCLAIMER -------------------
