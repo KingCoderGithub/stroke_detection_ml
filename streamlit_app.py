@@ -249,24 +249,47 @@ if page.startswith("🏠"):
 
 
 # ------------------- ABOUT -------------------
-elif page.startswith("📘"):
-    st.markdown("<h2 style='color: white;'>📘 About </h2>", unsafe_allow_html=True)
+# ------------------- HOW IT WORKS -------------------
+elif page.startswith("🧠"):
+    st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
     st.markdown("""
-    This stroke risk predictor was built to **raise public awareness** about stroke risk factors.
+    ### 🧮 Inputs
+    - **Demographics**: Age, Gender, Residence
+    - **Health**: BMI, Glucose, Hypertension, Heart disease
+    - **Lifestyle**: Smoking, Work type, Marriage
 
-    ---
-    **🎯 Goals:**
-    - Make health education accessible
-    - Encourage early preventive care
-    - Showcase real-world ML applications in healthcare
+    ### ⚙️ Model
+    - Calibrated **XGBoost** classifier
+    - Engineered features (e.g. BMI/Glucose ratio, cardio flags, interaction terms)
+    - Balanced with **SMOTE** so the model sees more stroke cases during training
+    - Threshold tuned for **high recall** (prioritising catching high-risk cases)
 
-    **🧑‍🎓 Ideal for:**
-    - General public
-    - Students & educators
-    - Health-conscious individuals
-
-    _This tool does not replace professional medical advice._
+    ### 🔎 Explainability (SHAP)
+    We use **SHAP (SHapley Additive exPlanations)** to understand which features
+    are pushing the prediction higher or lower for each person.
     """)
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.image(
+            "reports/shap_summary.png",
+            caption="Global feature importance — which features most influence stroke risk overall",
+            use_column_width=True,
+        )
+
+    with col2:
+        st.image(
+            "reports/shap_force_example_0.png",
+            caption="Example SHAP explanation for one person’s prediction",
+            use_column_width=True,
+        )
+
+    st.markdown("""
+    These plots help make the model less of a “black box” by showing how inputs
+    like age, BMI, glucose and smoking status contribute to the final risk score.
+    """)
+
 
 # ------------------- HOW IT WORKS -------------------
 elif page.startswith("🧠"):
