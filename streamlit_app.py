@@ -348,5 +348,6 @@ elif page.startswith("📚"):
     - Streamlit + FastAPI
 
     **🛠 Built by:** [KingCoderGithub](https://github.com/KingCoderGithub)  
+    https://github.com/KingCoderGithub/stroke_detection_ml.git
     MIT Licensed — Educational use only.
     """)
