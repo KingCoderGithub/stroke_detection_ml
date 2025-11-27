@@ -248,21 +248,21 @@ if page.startswith("🏠"):
 
 
 
-
 # ------------------- HOW IT WORKS -------------------
 elif page.startswith("🧠"):
     st.markdown("<h2 style='color: white;'>🧠 How It Works</h2>", unsafe_allow_html=True)
     st.markdown("""
     ### 🧮 Inputs
-    - **Demographics**: Age, Gender, Residence
-    - **Health**: BMI, Glucose, Hypertension, Heart disease
-    - **Lifestyle**: Smoking, Work type, Marriage
+    The model uses a combination of everyday health and lifestyle information:
+    - **Demographics**: Age, Gender, Residence type
+    - **Health**: BMI, Average glucose level, Hypertension, Heart disease
+    - **Lifestyle**: Smoking status, Work type, Marital history
 
-    ### ⚙️ Model
+    ### ⚙️ Model Pipeline
     - Calibrated **XGBoost** classifier
-    - Engineered features (e.g. BMI/Glucose ratio, cardio flags, interaction terms)
-    - Balanced with **SMOTE** so the model sees more stroke cases during training
-    - Threshold tuned for **high recall** (prioritising catching high-risk cases)
+    - Rich engineered features (e.g. BMI/Glucose ratio, cardio flags, interaction terms like age×BMI, age×glucose)
+    - Training-time balancing with **SMOTE** so the model sees more stroke cases during training
+    - Decision threshold tuned for **high recall**, prioritising catching more high-risk users (safety-first)
 
     ### 🔎 Explainability (SHAP)
     We use **SHAP (SHapley Additive exPlanations)** to understand which features
@@ -289,6 +289,40 @@ elif page.startswith("🧠"):
     These plots help make the model less of a “black box” by showing how inputs
     like age, BMI, glucose and smoking status contribute to the final risk score.
     """)
+
+    # ------------------- MODEL PERFORMANCE SECTION -------------------
+    st.markdown("### 📊 Model Performance (validation)")
+
+    # Show metrics summary from the text file if it exists
+    try:
+        with open("reports/metrics_summary.txt", "r") as f:
+            metrics_text = f.read()
+        st.code(metrics_text, language="text")
+    except FileNotFoundError:
+        st.info("Run `python metrics_report.py` to generate validation metrics and plots.")
+
+    col3, col4, col5 = st.columns(3)
+
+    with col3:
+        st.image(
+            "reports/pr_curve.png",
+            caption="Precision–Recall curve (focus on rare stroke cases)",
+            use_column_width=True,
+        )
+
+    with col4:
+        st.image(
+            "reports/confusion_matrix.png",
+            caption="Confusion matrix at the chosen decision threshold",
+            use_column_width=True,
+        )
+
+    with col5:
+        st.image(
+            "reports/calibration_curve.png",
+            caption="Calibration curve — how well predicted probabilities match reality",
+            use_column_width=True,
+        )
 
 
 # ------------------- ABOUT -------------------

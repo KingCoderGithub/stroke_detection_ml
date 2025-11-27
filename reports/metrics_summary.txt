@@ -1,0 +1,12 @@
+MODEL VALIDATION METRICS
+========================
+Threshold used: 0.34
+
+PR AUC (average precision): 0.5417
+F1 score:                   0.5424
+Precision (binary):         0.5740
+Recall (binary):            0.5141
+
+Confusion matrix (rows=true, cols=pred):
+TN: 4766   FP: 95
+FN: 121   TP: 128
